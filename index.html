@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Technical Principles of Learning Pool</title>
+<style>
+body{font-family:Helvetica, Arial, sans-serif;font-size:81.25%;}
+h1, h2 {font-family:Consolas, "Courier New", monospace;}
+header, h1, h2{color:#565656;}
+header h1{margin-bottom:0;}
+header p{margin:0;font-style:italic;}
+header,
+section{position:relative; max-width:800px;margin:1em auto;background:#efefef;padding:10px;}
+section p {background:#fff;padding:0.5em;margin:0.3em 0;}
+section p:last-child{margin-bottom:2em;}
+li{margin:0.4em 1em; line-height:1.3;}
+li span.title{font-size:1.230769231em;}
+li.has-children span.title {border-bottom:1px dotted #cdcdcd;}
+li.has-children span.title:hover{border-bottom:1px solid #9a9a9a;cursor:pointer;}
+.hide-children p{display:none;}
+.show-all p{display:block;}
+a,
+a:visited {color:#000088;}
+a:hover {text-decoration:none;}
+@keyframes highlight {
+  0% {
+    opacity: 0
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.visible-children p {
+  animation: highlight 0.5s;
+}
+
+.section-toggler {position:absolute;top:10px;right:10px;}
+
+</style>
+<script>
+function hideAllChildren(node) {
+	var items = node.querySelectorAll("ol li");
+	for (var i = 0; i < items.length; i++) {
+		var item = items[i];
+		item.classList.add("hide-children");
+		item.classList.remove("visible-children");
+	}
+}
+function showAllChildren(node) {
+	var items = node.querySelectorAll("ol li");
+	for (var i = 0; i < items.length; i++) {
+		var item = items[i];
+		item.classList.add("visible-children");
+		item.classList.remove("hide-children");
+	}
+} 
+function showItem(node) {
+	node.classList.remove("hide-children");
+	node.classList.add("visible-children");
+}
+function showDetail() {
+	// this is a section > ol > li > span
+	if (this.parentNode.classList.contains("visible-children")) {
+		hideAllChildren(this.parentNode.parentNode.parentNode);
+	} else {
+		hideAllChildren(this.parentNode.parentNode.parentNode);
+		showItem(this.parentNode);
+	}
+}
+function showDetailOnEnterAndSpace(event) {
+	if(event.charCode == 32 || event.keyCode == 13) {
+		showDetail.call(this);
+	}
+}
+
+function toggleSection(event) {
+	event.preventDefault();
+	var section = this.parentNode;
+	if(section.classList.contains("show-all")) {
+		section.classList.remove("show-all");
+		hideAllChildren(section);
+	} else {
+		section.classList.add("show-all");
+		showAllChildren(section);
+	}
+}
+
+function toggleAllSections(event) {
+	event.preventDefault();
+	var sectionLinks = document.querySelectorAll("section a.section-toggler");
+	var evt = document.createEvent("HTMLEvents");
+	evt.initEvent("click", false, true ); // event type,bubbling,cancelable
+	for (var i = 0; i < sectionLinks.length; i++) {
+		sectionLinks[i].dispatchEvent(evt);
+	}
+}
+
+function addClickEvents() {
+	var titles = document.querySelectorAll("li .title");
+	for (var i = 0; i < titles.length; i++) {
+		var title = titles[i];
+		if (title.parentNode.children.length > 1) {
+			title.parentNode.classList.add("has-children");
+			title.addEventListener("click", showDetail);
+			title.addEventListener("keypress", showDetailOnEnterAndSpace);
+			title.setAttribute("tabindex", "0");
+			title.setAttribute("role", "button");			
+		}
+	}
+}
+function addSectionExpansion() {
+	var sections = document.querySelectorAll("section");
+	for (var i = 0; i < sections.length; i++) {
+		var section = sections[i];
+		var link = document.createElement("a");
+		link.classList.add("section-toggler");
+		link.setAttribute("href", "#");
+		link.addEventListener("click", toggleSection);
+		link.innerHTML = "Open/Close section";
+		section.appendChild(link);
+	}
+}
+function addFullExpansion() {
+	var header = document.querySelector("header");
+	var link = document.createElement("a");
+	link.classList.add("section-toggler");
+	link.setAttribute("href", "#");
+	link.addEventListener("click", toggleAllSections);
+	link.innerHTML = "Open/Close all";
+	header.appendChild(link);
+	 
+}
+function cutsMustard() {
+	if('querySelector' in document
+	     && 'localStorage' in window
+	     && 'addEventListener' in window) {
+			 return true;
+		 } else {
+			 return false;
+		 }
+}
+function setupDocument() {
+	if (cutsMustard()) {
+		hideAllChildren(document);
+		addClickEvents();
+		addSectionExpansion();
+		addFullExpansion();
+	}
+}
+document.addEventListener("DOMContentLoaded", setupDocument);
+</script>
+</head>
+<body>
+	<header>
+	<h1>Technical Product Principles</h1>
+	<p>Learning Pool Platform</p>
+</header>
+<section>
+	<h2>Product</h2>
+	<ol>
+		<li><span class="title">the product is collaborative - make sharing easy</span>
+			<p>This means every asset in the content has a unique URL. The content found at that URL doesn't change, so if you change the content, you change the URL.  This brings the benefit of enabling long cache lifetimes on our HTTP responses.</p>
+			<p>It's understood of course, that the content probably requires a sign-in to view it. Make that simple too, and bring me back to the resource I asked for when I've signed in.</p>
+		</li>
+		<li><span class="title">the product is intuitive - hide complexity, where possible make the right decisions for the user</span>
+			<p>Configuration and Administration should have a "golden path" which we optimise for.  Make this simple and we'll save support costs. If the system requires a choice, make a sensible default answer selected. Hide un-necessary configuration settings if possible.</p>
+		</li>
+		<li><span class="title">it's available everywhere - content and features are available on all devices simultaneously</span>
+			<p>Don't favour the desktop when you are designing or implementing features.  Make it work mobile first (small screen, slow network) and then enhance using appropriate feature detection.</p>
+		</li>
+		<li><span class="title">it's supported and supportable - the product works to avoid errors and is vocal about its status and what it's doing at any time</span>
+			<p>Spend time and effort in writing good error messages (both to the User and the log). Make sure it's really clear what's broken, and why it's broken.</p>
+			<p>Code defensively. Consider failure states when you're developing and make sure you have test cases for them.</p>
+			<p>Think about how you would know your application is broken. What do you need to monitor?</p></li>
+		<li><span class="title">it's resilient - one component breaking doesn't break the whole product</span>
+			<p>Our components shouldn't depend on each other, and if they do, if one breaks it shouldn't mean the other one does.  Different components on a page or in an application should be able to be turned off independently.</p>
+			<p>Applications should also fail fast. Use sensible short timeouts on requests, services should send appropriate responses (e.g. 503 Service Unavailable with a Retry-After header) and clients should respect those responses.</p>
+			<p>It must be possible to remotely adjust the rate of polling a client application performs. This allows us to slow polling down (or turn it off) if the service is under extreme load</p>
+		</li>
+	</ol>
+</section>
+<section>
+	<h2>Content</h2>
+	<ol>
+		<li><span class="title">your choice of platform (mobile, tablet, desktop) shouldn't limit your access to content</span>
+			<p>Ensure your content is platform agnostic.</p>
+			<p>Core content should be delivered to all devices at the same time. Delivering additional content to different devices (e.g Flash animations) is an enhancement and should be done after delivering core content.</p></li>
+		<li><span class="title">the same content has different presentational requirements on different devices</span>
+			<p>Design content management systems to allow for flexibility in display. Store content in a form that describes its semantic structure rather than its presentational structure. Its presentation will change whereas its meaning will not.</p>
+			<p>Bring the semantic structure of the content into the application (via the domain model). Avoid tying your application structure too tightly to the current output format</p></li>
+		<li><span class="title">content and applications have different lifecycles</span>
+			<p>It's inevitable that your content will outlive your technology.  You'll need to support old content in a new system. You'll need to be able to add new features to your output selectively.</p>
+			<p>Content needs to be stored in a technology neutral way. Ensure content from your application can be easily migrated to new applications. Make it easy to export content in a standard format (something flexible and open like XML or JSON).</li>
+	</ol>
+</section>
+<section>
+<h2>Mobile</h2>
+<ol>
+	<li><span class="title">Mobile devices are constrained interfaces - limited screen estate, limited network bandwidth, limited multi-tasking.  </span>
+		<p>This is true of desktop devices too actually.  Creating applications under constraints leads to better applications. Just don't forget that users probably don't have the same technology setup as you!</p></li>
+<li><span class="title">Mobile users are typically task oriented - they use an App to achieve something (like connecting with friends via Facebook) then they move on.</span>
+	<p>Mobile requires that you cut to the chase. Don't mess around with nice bells and whistles. Make it easy for the user to achieve what they have set out to do.</p></li>
+<li><span class="title">Mobile users expect a great experience</span>
+	<p>Don't treat them as second-class citizens. This means optimised designs for mobile interfaces and ensuring you test in real world situations on real world devices.</p>
+	<p>"Almost half (47 percent) of consumers who have conducted a mobile transaction in the past year expect the experience on their phones to be better than the experience in-store. 80 percent expect the experience to be better than or equal to in-store and 85 percent expect the experience to be better than or equal to online using a laptop or desktop computer" <a href="http://web.archive.org/web/20130126104316/http://www.tealeaf.com/news/news-releases/2011/Tealeaf-Announces-New-Mobile-Research.php"> http://www.tealeaf.com/news/news-releases/2011/Tealeaf-Announces-New-Mobile-Research.php</a></p></li>
+<li><span class="title">Mobile users expect the same content as they'd get on a desktop - though perhaps not in the same way</span>
+	<p>See above comments about content.</p></li>
+<li><span class="title">Page Speed is the key feature</span>
+	<p>A good rule of thumb is that a webpage with a weight of 100KB will take 10 seconds to download over a GPRS network. (learningpool.com has a page weight of 1.6MB and 129 requests - 08/05/13)</p>
+	<p>This has huge implications. There are lots of stats available about user engagement, satisfaction and bounce rates which suggests that a fast site keeps users happier and makes them use the site more.</p>
+	<p>Consider page speed as a Non-Functional Requirement.  If the feature you are developing makes the site slow, then we won't launch it.</p></li>
+</ol>
+</section>
+<section>
+	<h2>Applications</h2>
+<ol>
+	<li><span class="title">The product is a suite of independent applications</span>
+		<p>A <em>Suite</em>, each application feels like a Learning Pool application. It behaves in a consistent way and has the Learning Pool design</p>
+		<p><em>Independent</em>, they integrate well but don't depend on each other. We can scale them independently as demand requires. They can be deployed separately. Also, replacements, sales, upgrades...</p></li>
+<li><span class="title">Each application does one thing well</span>
+	<p>This is an ideal rather than a rule. Rather, each application should aim to do a coherent set of things rather than trying to be a swiss army knife.</p>
+	<p>If a feature doesn't fit with an application then it doesn't get added to that application.  If it's a necessary feature for the product, then it should fit somewhere else, or it needs its own application.</p>
+	<p>Ask yourself, is this the right place for this feature?</p></li>
+<li><span class="title">Actively seek to identify and extract a ubiquitous domain specific language from the application - "Reflect in code how users of the software think and speak about their work"</span>
+	<p>You should really read the <a href="http://www.domainlanguage.com/ddd/">book</a> by Eric Evans</p></li>
+<li><span class="title">Similarly, isolate product specific code from core platform code in separate application modules.
+</span>
+	<p>For example, Eclipse allows you to have two projects, with Project A dependent only on pure Java libraries, and Project B dependent on A <em>and</em> the Android Framework.  By rigorously moving as much code as possible to classes in Project A, you minimise the coupling with Android, make testing easier, and arrive at a pure Java application core which facilitates re-use.</p>
+	<p>The separation can be done in source control (git submodules perhaps), IDEs (separate projects) or deployments (libraries, rpms, Jars).</p>
+	<p>This makes testing easier as you can test business logic separately from dependent applications. By moving as much code into libraries that don't depend on underlying frameworks you make it easier to develop a clear domain model, reduce the dependency on a specific software version and make understanding the application easier.</p></li>
+<li><span class="title">Build interfaces to applications which make giving multiple clients access easy</span>
+	<p>If we have multiple applications that are on different upgrade cycles, and content that outlives the application that is used to create it, then it's almost inevitable that we'll have two applications that perform the same function (one legacy and deprecated, the other new and feature poor). You need to write your application so it can send content to (or receive content from) applications of both types.</p></li>
+<li><span class="title">Focus on the structure of the messages you pass between applications, ensure they maintain an internal consistency</span>
+	<p>The format of the messages are an important part of the Domain Language. This is important in allowing us to have loosely coupled applications.</p></li>
+</ol>
+</section>
+<section>
+	<h2>Development</h2>
+<ol>
+	<li><span class="title">If it doesn't have tests, it doesn't work</span>
+		<p>This might be more accurately presented as "if it isn't tested it doesn't work". However, we write too much code to adequately test it all manually and the amount of regression testing requires grows as new features are released.  Automated acceptance tests are essential to ensure a stable platform for future development.</p></li>
+</ol>
+</section>
+
+
