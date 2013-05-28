@@ -19,20 +19,16 @@ li.has-children span.title {border-bottom:1px dotted #cdcdcd;}
 li.has-children span.title:hover{border-bottom:1px solid #9a9a9a;cursor:pointer;}
 .hide-children p{display:none;}
 .show-all p{display:block;}
+
 a,
 a:visited {color:#000088;}
 a:hover {text-decoration:none;}
 @keyframes highlight {
-  0% {
-    opacity: 0
-  }
-  100% {
-    opacity: 1;
-  }
+  0% {opacity: 0}
+  100% {opacity: 1;}
 }
-
 .visible-children p {
-  animation: highlight 0.5s;
+  animation: highlight 0.7s;
 }
 
 .section-toggler {position:absolute;top:10px;right:10px;}
@@ -51,26 +47,27 @@ function showAllChildren(node) {
 	var items = node.querySelectorAll("ol li");
 	for (var i = 0; i < items.length; i++) {
 		var item = items[i];
-		item.classList.add("visible-children");
-		item.classList.remove("hide-children");
+		_showDetail(item);
 	}
 } 
-function showItem(node) {
+function _showDetail(node) {
 	node.classList.remove("hide-children");
 	node.classList.add("visible-children");
 }
-function showDetail() {
-	// this is a section > ol > li > span
+function toggleShowDetail() {
+	// "this" is a section > ol > li > span
+	var shouldShowItem = true;
 	if (this.parentNode.classList.contains("visible-children")) {
-		hideAllChildren(this.parentNode.parentNode.parentNode);
-	} else {
-		hideAllChildren(this.parentNode.parentNode.parentNode);
-		showItem(this.parentNode);
+		shouldShowItem = false;
+	}
+	hideAllChildren(this.parentNode.parentNode.parentNode);
+	if (shouldShowItem) {
+		_showDetail(this.parentNode);
 	}
 }
-function showDetailOnEnterAndSpace(event) {
+function toggleShowDetailOnEnterAndSpace(event) {
 	if(event.charCode == 32 || event.keyCode == 13) {
-		showDetail.call(this);
+		toggleShowDetail.call(this);
 	}
 }
 
@@ -102,32 +99,32 @@ function addClickEvents() {
 		var title = titles[i];
 		if (title.parentNode.children.length > 1) {
 			title.parentNode.classList.add("has-children");
-			title.addEventListener("click", showDetail);
-			title.addEventListener("keypress", showDetailOnEnterAndSpace);
+			title.addEventListener("click", toggleShowDetail);
+			title.addEventListener("keypress", toggleShowDetailOnEnterAndSpace);
 			title.setAttribute("tabindex", "0");
 			title.setAttribute("role", "button");			
 		}
 	}
 }
+function createSectionTogglerLink(onClickFunction, elementContents) {
+	var link = document.createElement("a");
+	link.classList.add("section-toggler");
+	link.setAttribute("href", "#");
+	link.addEventListener("click", onClickFunction);
+	link.innerHTML = elementContents;
+	return link;
+}
 function addSectionExpansion() {
 	var sections = document.querySelectorAll("section");
 	for (var i = 0; i < sections.length; i++) {
 		var section = sections[i];
-		var link = document.createElement("a");
-		link.classList.add("section-toggler");
-		link.setAttribute("href", "#");
-		link.addEventListener("click", toggleSection);
-		link.innerHTML = "Open/Close section";
+		var link = createSectionTogglerLink(toggleSection, "Open/Close section");
 		section.appendChild(link);
 	}
 }
 function addFullExpansion() {
 	var header = document.querySelector("header");
-	var link = document.createElement("a");
-	link.classList.add("section-toggler");
-	link.setAttribute("href", "#");
-	link.addEventListener("click", toggleAllSections);
-	link.innerHTML = "Open/Close all";
+	var link = createSectionTogglerLink(toggleAllSections, "Open/Close all");
 	header.appendChild(link);
 	 
 }
