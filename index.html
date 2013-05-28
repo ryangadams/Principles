@@ -161,7 +161,9 @@ function makeAddressable() {
 }
 function captureLink() {
 	var hash = window.location.hash;
-	console.log(hash);
+	if (hash.trim() == "") {
+		return false;
+	}
 	var evt = document.createEvent("HTMLEvents");
 	evt.initEvent("click", false, true ); // event type,bubbling,cancelable
 	if (hash.substring(1,2) == "l") {
