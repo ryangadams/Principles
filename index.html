@@ -234,7 +234,10 @@ document.addEventListener("DOMContentLoaded", setupDocument);
 	<ol>
 		<li><span class="title">the product is collaborative - make sharing easy</span>
 			<p>This means every asset in the content has a unique URL. The content found at that URL doesn't change, so if you change the content, you change the URL.  This brings the benefit of enabling long cache lifetimes on our HTTP responses.</p>
+			<p>Of course, the reverse of this is also true, if the thing the URL addresses hasn't changed, then you shouldn't change the URL (so, the Learning Pool recommends Health &amp; Safety course should always be available at the same URL for example).</p>
 			<p>It's understood of course, that the content probably requires a sign-in to view it. Make that simple too, and bring me back to the resource I asked for when I've signed in.</p>
+			<p>Ideally we'd serve all of our content (and definitely our images) with very long cache lifetimes (say 1 year).  This means that a customer with a proxy server and a squid cache could cache our course for their users and not hit our servers at all (if we could avoid hitting the Internet at all our platform would be very fast).</p>
+			<p>Also, Tim told us that <a href="http://www.w3.org/Provider/Style/URI.html">cool URIs don't change</a></p>
 		</li>
 		<li><span class="title">the product is intuitive - hide complexity, where possible make the right decisions for the user</span>
 			<p>Configuration and Administration should have a "golden path" which we optimise for.  Make this simple and we'll save support costs. If the system requires a choice, make a sensible default answer selected. Hide un-necessary configuration settings if possible.</p>
@@ -258,7 +261,8 @@ document.addEventListener("DOMContentLoaded", setupDocument);
 	<ol>
 		<li><span class="title">your choice of platform (mobile, tablet, desktop) shouldn't limit your access to content</span>
 			<p>Ensure your content is platform agnostic.</p>
-			<p>Core content should be delivered to all devices at the same time. Delivering additional content to different devices (e.g Flash animations) is an enhancement and should be done after delivering core content.</p></li>
+			<p>Core content should be delivered to all devices at the same time. Delivering additional content to different devices (e.g Flash animations) is an enhancement and should be done after delivering core content.</p>
+			<p>I think this is realistic. I think we need to do it.  I don't think we'll do it all at once. It's a long term objective. This one is really saying, "in future, when we plan new features and new content, we'll do it across all devices at once. We won't prioritise desktop enhancements over mobile capability".</p></li>
 		<li><span class="title">the same content has different presentational requirements on different devices</span>
 			<p>Design content management systems to allow for flexibility in display. Store content in a form that describes its semantic structure rather than its presentational structure. Its presentation will change whereas its meaning will not.</p>
 			<p>Bring the semantic structure of the content into the application (via the domain model). Avoid tying your application structure too tightly to the current output format</p></li>
@@ -272,7 +276,7 @@ document.addEventListener("DOMContentLoaded", setupDocument);
 <ol>
 	<li><span class="title">Mobile devices are constrained interfaces - limited screen estate, limited network bandwidth, limited multi-tasking.  </span>
 		<p>This is true of desktop devices too actually.  Creating applications under constraints leads to better applications. Just don't forget that users probably don't have the same technology setup as you!</p></li>
-<li><span class="title">Mobile users are typically task oriented - they use an App to achieve something (like connecting with friends via Facebook) then they move on.</span>
+<li><span class="title">Mobile users are typically task oriented - they use an App to achieve something then they move on.</span>
 	<p>Mobile requires that you cut to the chase. Don't mess around with nice bells and whistles. Make it easy for the user to achieve what they have set out to do.</p></li>
 <li><span class="title">Mobile users expect a great experience</span>
 	<p>Don't treat them as second-class citizens. This means optimised designs for mobile interfaces and ensuring you test in real world situations on real world devices.</p>
